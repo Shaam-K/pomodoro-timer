@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pomodo App</title>
+  <link rel="stylesheet" type="text/css" href="{% static 'css/style.min.css' %}">
+  <link rel="stylesheet" type="text/css" href="{% static 'css/timer.css' %}">
+  <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon.png' %}">
+  <link rel="icon" type="image/png" sizes="32x32" href="{% static 'icons/favicon-32x32.png' %}">
+  <link rel="icon" type="image/png" sizes="16x16" href="{% static 'icons/favicon-16x16.png' %}">
+  <link rel="manifest" href="{% static 'icons/site.webmanifest' %}">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bakbak+One&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@300&display=swap" rel="stylesheet">
+</head>
+
+<body class="bg-gray-100">
+  <nav class="bg-gray-200 active:bg-gray-900">
+    <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+      <div class="relative flex items-center justify-between h-16">
+        <div class="mx-auto inset-y-0 flex items-center">
+          <div class="flex items-center sm:items-stretch sm:justify-start">
+            <div class="flex-shrink-0 flex items-center sm:mr-44 mr-5">
+              <img class="block h-8" src="{% static 'icons/logo_tick.svg' %}" alt="logo_tick"
+                style="padding-left: 0.5rem;">
+              <h1 class="text-gray-700"
+                style="font-size: 1.75rem; padding-left: 0.5rem; font-family: 'Bakbak One', cursive;">Pomodo</h1>
+            </div>
+            <div class="hidden sm:block sm:ml-6">
+              <div class="flex space-x-5 ml-20">
+
+                <a href="{% url 'home' %}"
+                  class="bg-gray-700 text-gray-300 hover:bg-gray-900 transition-all hover:text-white px-8 py-2 rounded-md font-medium text-base">Timer</a>
+                  
+                <a href="{% url 'view_tasks' %}"
+                  class="text-gray-300 hover:bg-gray-900 bg-gray-700 transition-all hover:text-white px-8 py-2 rounded-md font-medium text-base">View Tasks</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    <div class="sm:hidden" id="mobile-menu">
+      <div class="px-5 mx-auto space-y-5 w-4/5">
+        <a href="{% url 'home' %}"
+          class="bg-gray-700 text-gray-300 hover:bg-gray-900 hover:text-white block px-2 py-1 rounded-md text-xl font-medium"
+          style="text-align: center;">Timer</a>
+
+        <a href="{% url 'view_tasks' %}"
+        class="bg-gray-700 text-gray-300 hover:bg-gray-900 hover:text-white block px-2 py-1 rounded-md text-xl font-medium" style="text-align: center;">View Tasks</a>
+      </div>
+    </div>
+  </nav>
+  <div class="table mx-auto">
+    <form method="post" name="timer_form" action="{% url 'timer_form' %}"
+      class="w-full max-w-lg mx-auto sm:mt-15 mb-10 mb:15 mt-16">
+      {% csrf_token %}
+      <div class="flex flex-wrap mx-3 mb-2">
+        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2" for="hour">
+            Hours
+          </label>
+          <input type="number" value="0" min="0" max="24"
+            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            name="hour" id="hour" type="text" placeholder="HOURS">
+        </div>
+        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2" for="min">
+            minutes
+          </label>
+          <input type="number" min="0" value="0" max="60"
+            class="appearance-none block w-full bg-gray-200 text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
+            name="min" id="min" type="text" placeholder="MINS">
+        </div>
+        <div class="w-full md:w-1/3 px-3 mb-6 md:mb-0">
+          <label class="block uppercase tracking-wide text-gray-700 text-sm font-bold mb-2" for="grid-zip">
+            Breaks?
+          </label>
+          <select name="break"
+            class="block appearance-none w-full bg-gray-200 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+            <option>Yes</option>
+            <option>No</option>
+          </select>
+        </div>
+        <div class="mx-auto pt-5 flex-auto text-center">
+          <input type="submit" value="START" id="start"
+            class="block appearance-none w-full bg-gray-200 hover:bg-gray-300 border border-gray-200 text-gray-700 py-3 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500 font-bold text-base">
+        </div>
+      </div>
+    </form>
+  </div>
+  {% for data in timer_db %}
+  <div class="flex sm:w-3/5 w-full mx-auto rounded shadow-md mt-5 bg-white" style="font-family: 'Roboto', sans-serif;">
+    <div class="px-6 py-2">
+      <div class="font-bold text-lg mb-2">Due Date: {{ data.due_date }}</div>
+      <p class="text-gray-700 text-xl">
+        Task: {{ data.task_details }}
+      </p>
+      <p class="text-gray-500 text-base mt-2">
+        Created at: {{ data.task_created_date }}
+      </p>
+      <div class="flex space-x-5 mt-5">
+        <button class="bg-gray-300 hover:bg-gray-600 hover:text-white transition-all text-gray-700 p-2 px-5 rounded">Edit</button>
+        <button class="bg-green-300 hover:bg-green-500 hover:text-white transition-all text-green-700 p-2 px-3 rounded">Complete</button>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+  <div id="alert" class="w-auto sm:w-2/3 md:w-1/3 mx-auto mt-10">
+  </div>
+  {% for data in timer_data %}
+  <div class="center_timer">
+    <div id="app" class="text-gray-800 mx-auto" style="font-family: 'Bakbak One', cursive;"></div>
+  <div id="buttons">
+    <div class="flex sm:space-x-7 space-x-5 mt-10 sm:p-4 text-sm sm:text-xl">
+      <button onclick="this.disabled=true;document.getElementById('resume').disabled=false;" id="pause"
+        class="bg-gradient-to-r from-yellow-300 to-yellow-400 hover:from-yellow-400 hover:to-yellow-500 px-5 sm:px-10 p-4 sm:p-3 rounded-md text-white"
+        style=" font-size: 1.25rem; font-family: 'Bakbak One', cursive;">Pause</button>
+      <button onclick="this.disabled=true;document.getElementById('pause').disabled=false;" id="resume"
+        class="bg-gradient-to-r from-blue-300 to-blue-400 hover:from-blue-400 hover:to-blue-500 py-2 px-5 sm:px-12 p-4 sm:p-3 rounded-md text-white"
+        style=" font-size: 1.25rem; font-family: 'Bakbak One', cursive;">Resume</button>
+      <a href="{% url 'home' %}"><button
+          class="bg-gradient-to-l from-red-400 to-red-500 hover:from-red-500 hover:to-red-600 px-5 sm:px-12 p-4 sm:p-3 rounded-md text-white"
+          style="font-size: 1.25rem; font-family: 'Bakbak One', cursive;">Reset</button></a>
+    </div>
+  </div>
+  </div>
+  </div>
+  </div>
+  <footer class="text-center bg-gray-900 text-white py-2 mt-20">
+    <div class="flex px-6 pt-6">
+      <div class="mx-auto">
+        <h1 class="text-3xl text-center mb-2">Contact me</h1>
+        <hr>
+        <br>
+        <div class="justify-around">
+          <a href="#!" type="button" class="rounded-full border-2 border-white text-white leading-normal uppercase hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-9 h-9 m-1">
+            <svg aria-hidden="true"
+            focusable="false"
+            data-prefix="fab"
+            data-icon="linkedin-in"
+              class="w-3 h-full mx-auto"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 448 512"
+            >
+              <path
+                fill="currentColor"
+                d="M100.28 448H7.4V148.9h92.88zM53.79 108.1C24.09 108.1 0 83.5 0 53.8a53.79 53.79 0 0 1 107.58 0c0 29.7-24.1 54.3-53.79 54.3zM447.9 448h-92.68V302.4c0-34.7-.7-79.2-48.29-79.2-48.29 0-55.69 37.7-55.69 76.7V448h-92.78V148.9h89.08v40.8h1.3c12.4-23.5 42.69-48.3 87.88-48.3 94 0 111.28 61.9 111.28 142.3V448z"
+              ></path>
+            </svg>
+          </a>
+    
+          <a href="#!" type="button" class="rounded-full border-2 border-white text-white leading-normal uppercase hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out w-9 h-9 m-1">
+            <svg aria-hidden="true"
+            focusable="false"
+            data-prefix="fab"
+            data-icon="github"
+              class="w-3 h-full mx-auto"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 496 512"
+            >
+              <path
+                fill="currentColor"
+                d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6zm-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3zm44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9zM244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8zM97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1zm-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7zm32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1zm-11.4-14.7c-1.6 1-1.6 3.6 0 5.9 1.6 2.3 4.3 3.3 5.6 2.3 1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2z"
+              ></path>
+            </svg>
+          </a>
+          </div>
+      </div>
+    </div>
+    <div class="block p-6 rounded-lg shadow-lg bg-gray-900 max-w-md mx-auto">
+      <form>
+        <div class="form-group mb-6">
+          <input type="text" class="form-control block
+            w-full
+            px-3
+            py-1.5
+            text-base
+            font-normal
+            text-gray-700
+            bg-white bg-clip-padding
+            border border-solid border-gray-300
+            rounded
+            transition
+            ease-in-out
+            m-0
+            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput7"
+            placeholder="Name">
+        </div>
+        <div class="form-group mb-6">
+          <input type="email" class="form-control block
+            w-full
+            px-3
+            py-1.5
+            text-base
+            font-normal
+            text-gray-700
+            bg-white bg-clip-padding
+            border border-solid border-gray-300
+            rounded
+            transition
+            ease-in-out
+            m-0
+            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none" id="exampleInput8"
+            placeholder="Email address">
+        </div>
+        <div class="form-group mb-6">
+          <textarea
+          class="
+            form-control
+            block
+            w-full
+            px-3
+            py-1.5
+            text-base
+            font-normal
+            text-gray-700
+            bg-white bg-clip-padding
+            border border-solid border-gray-300
+            rounded
+            transition
+            ease-in-out
+            m-0
+            focus:text-gray-700 focus:bg-white focus:border-blue-600 focus:outline-none
+          "
+          id="exampleFormControlTextarea13"
+          rows="3"
+          placeholder="Message"
+        ></textarea>
+        </div>
+        <div class="form-group form-check text-center mb-6">
+          <input type="checkbox"
+            class="form-check-input h-4 w-4 border border-gray-300 rounded-sm bg-white checked:bg-blue-600 checked:border-blue-600 focus:outline-none transition duration-200 mt-1 align-top bg-no-repeat bg-center bg-contain mr-2 cursor-pointer"
+            id="exampleCheck87" checked>
+          <label class="form-check-label inline-block text-white" for="exampleCheck87">Send me a copy of this message</label>
+        </div>
+        <button type="submit" class="
+          w-full
+          px-6
+          py-2.5
+          bg-blue-600
+          text-white
+          font-medium
+          text-xs
+          leading-tight
+          uppercase
+          rounded
+          shadow-md
+          hover:bg-blue-700 hover:shadow-lg
+          focus:bg-blue-700 focus:shadow-lg focus:outline-none focus:ring-0
+          active:bg-blue-800 active:shadow-lg
+          transition
+          duration-150
+          ease-in-out">Send</button>
+      </form>
+    </div>
+  </footer>
+  <script>
+    // Credit: Mateusz Rybczonec for starting timer. Features added to timer by Me
+    const FULL_DASH_ARRAY = 283;
+    const WARNING_THRESHOLD = 10;
+    const ALERT_THRESHOLD = 5;
+    var button_pause = document.getElementById("pause")
+    var button_resume = document.getElementById("resume")
+    var pause = false;
+    const COLOR_CODES = {
+      info: {
+        color: "green"
+      },
+      warning: {
+        color: "orange",
+        threshold: WARNING_THRESHOLD
+      },
+      alert: {
+        color: "red",
+        threshold: ALERT_THRESHOLD
+      }
+    };
+    const TIME_LIMIT = '{{ data.seconds }}';
+    const BREAK_AMOUNT = '{{ data.break_amount }}';
+    const BREAK_TIME = '{{ data.break_time }}';
+    const zero_error = '{{ data.zero }}';
+    const break_response = '{{ data.break_response }}' //Yes or No
+
+    function starting_break() {
+      const BREAK_AMOUNT = '{{ data.break_amount }}';
+      const BREAK_TIME = '{{ data.break_time }}';
+      const break_response = '{{ data.break_response }}';
+      
+      TIME_LIMIT = BREAK_TIME;
+      clearInterval();
+      startTimer();
+    }
+
+    if (zero_error === 'yes') {
+
+      document.getElementById("alert").innerHTML +=
+      `<div class="bg-red-500 text-white font-bold rounded-t px-4 py-2">
+      Error
+      
+    </div>
+    <div class="border border-t-0 border-red-400 rounded-b bg-red-100 px-4 py-3 text-red-700">
+      <p>Timer cannot start from 0</p>
+    </div>`;
+    document.getElementById("buttons").style.display = 'none';
+    document.getElementById("buttons").style.display = 'none';
+    }
+    else {
+      let timePassed = 0;
+      var timeLeft;
+      let timerInterval = null;
+      if (TIME_LIMIT === 0) {
+        timeLeft = 0;
+      } else {
+        timeLeft = TIME_LIMIT;
+      }
+
+      let remainingPathColor = COLOR_CODES.info.color;
+
+      document.getElementById("app").innerHTML = `
+<div class="base-timer">
+  <svg class="base-timer__svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+    <g class="base-timer__circle">
+      <circle class="base-timer__path-elapsed" cx="50" cy="50" r="45"></circle>
+      <path
+        id="base-timer-path-remaining"
+        stroke-dasharray="283"
+        class="base-timer__path-remaining ${remainingPathColor}"
+        d="
+          M 50, 50
+          m -45, 0
+          a 45,45 0 1,0 90,0
+          a 45,45 0 1,0 -90,0
+        "
+      ></path>
+    </g>
+  </svg>
+  <span id="base-timer-label" class="base-timer__label">${formatTime(
+        timeLeft
+      )}</span>
+</div>
+`;
+      if (!pause === true && TIME_LIMIT >= 0) {
+        startTimer();
+        setRemainingPathColor(timeLeft);
+        function onTimesUp() {
+          clearInterval(timerInterval);
+        }
+        function startTimer() {
+          timerInterval = setInterval(() => {
+            timePassed = timePassed += 1;
+            timeLeft = TIME_LIMIT - timePassed;
+            if (timeLeft < 0) {
+              return '0' + timeLeft.toString();
+            }
+            document.getElementById("base-timer-label").innerHTML = formatTime(
+              timeLeft
+            );
+            setCircleDasharray();
+            setRemainingPathColor(timeLeft);
+            if (timeLeft === 0) {
+              onTimesUp();
+            }
+          }, 1000);
+        }
+      }
+
+      if (timeLeft === 0 && break_response === 'Yes'){
+        starting_break()
+      }
+
+      button_pause.addEventListener("click", function (event) {
+        onTimesUp();
+      })
+
+      if (TIME_LIMIT >= 50) {
+        clearInterval();
+        timeLeft = TIME_LIMIT + BREAK_TIME;
+      }
+
+
+      button_resume.disabled = true;
+      button_resume.addEventListener("click", function (event) {
+        if (pause === false) {
+          startTimer();
+        }
+      })
+
+      function formatTime(time) {
+        const hours = Math.floor(time / 60 / 60)
+        var minutes = Math.floor(time / 60) - (hours * 60);
+        let seconds = time % 60;
+
+        if (seconds < 10) {
+          seconds = `0${seconds}`;
+        }
+
+        if (minutes < 10) {
+          minutes = `0${minutes}`;
+        }
+
+        return `${hours}:${minutes}:${seconds}`;
+      }
+
+      function setRemainingPathColor(timeLeft) {
+        const { alert, warning, info } = COLOR_CODES;
+        if (timeLeft <= alert.threshold) {
+          document
+            .getElementById("base-timer-path-remaining")
+            .classList.remove(warning.color);
+          document
+            .getElementById("base-timer-path-remaining")
+            .classList.add(alert.color);
+        } else if (timeLeft <= warning.threshold) {
+          document
+            .getElementById("base-timer-path-remaining")
+            .classList.remove(info.color);
+          document
+            .getElementById("base-timer-path-remaining")
+            .classList.add(warning.color);
+        }
+      }
+
+      function calculateTimeFraction() {
+        const rawTimeFraction = timeLeft / TIME_LIMIT;
+        return rawTimeFraction - (1 / TIME_LIMIT) * (1 - rawTimeFraction);
+      }
+
+      function setCircleDasharray() {
+        const circleDasharray = `${(
+          calculateTimeFraction() * FULL_DASH_ARRAY
+        ).toFixed(0)} 283`;
+        document
+          .getElementById("base-timer-path-remaining")
+          .setAttribute("stroke-dasharray", circleDasharray);
+      }
+    }
+  </script>
+  {% endfor %}
+</body>
+
+</html>

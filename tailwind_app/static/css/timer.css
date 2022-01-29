@@ -1,0 +1,67 @@
+/* Timer styling */
+.center_timer {
+    margin-top: 2rem;
+    display: grid;
+    place-items: center;
+}
+
+.base-timer {
+    position: relative;
+    width: 400px;
+    height: 400px;
+  }
+  
+  .base-timer__svg {
+    transform: scaleX(-1);
+  }
+  
+  .base-timer__circle {
+    fill: none;
+    stroke: none;
+  }
+  
+  .base-timer__path-elapsed {
+    stroke-width: 7px;
+    stroke: rgb(22, 22, 22);
+  }
+  
+  .base-timer__path-remaining {
+    stroke-width: 7px;
+    stroke-linecap: round;
+    transform: rotate(90deg);
+    transform-origin: center;
+    transition: 1s linear all;
+    fill-rule: nonzero;
+    stroke: currentColor;
+  }
+  
+  .base-timer__path-remaining.green {
+    color: rgb(60, 158, 114);
+  }
+  
+  .base-timer__path-remaining.orange {
+    color: rgb(223, 195, 37);
+  }
+  
+  .base-timer__path-remaining.red {
+    color: rgb(243, 54, 54);
+  }
+  
+  .base-timer__label {
+    position: absolute;
+    width: 400px;
+    height: 400px;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+  }
+
+.center_timer { /* stops mouse input*/
+    user-select: none;
+   -webkit-user-select: none;
+   -khtml-user-select: none;
+   -moz-user-select: none;
+   -ms-user-select: none;
+}
