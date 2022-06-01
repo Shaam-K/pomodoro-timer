@@ -1,0 +1,41 @@
+## Instructions to start up project
+- Before starting this, make sure you create a new MySQL database for this project.
+- Npm modules may be out of date when you clone this repo, take out terminal and type out:
+  - `npm install`
+  - make to be in root directory of the project before executing the command
+
+In settings.py you need the following
+
+- **django secret key**:
+  
+  - you can generate one by creating an empty django project and copy pasting that secret key to this project or just type in something if you just want to test it out.
+    
+  Settings.py line 22  
+    
+   `
+   SECRET_KEY = "SECRET KEY HERE"` 
+
+- **MySQL Database**:
+  - Name of database
+  - Host  (_example : 130.0.0.5_)
+  - Port  (_example: 4405_)
+  - User  (_default is root_)
+  - Password for MySQL
+ 
+  ### Fill in the following details that are in caps 
+  Settings.py line 80-89
+  ```
+  DATABASES = {
+      'default': {
+          'ENGINE': 'django.db.backends.mysql',
+          'NAME': "DATABASE NAME",
+          'HOST': "HOST",
+          'PORT': "PORT",
+          'USER': "USER, DEFAULT IS ROOT",
+          'PASSWORD': "PASSWORD",
+      }
+  }
+
+  ```
+Sorry for not making this process user-friendly :/
+Thanks for checking out the repo :)
