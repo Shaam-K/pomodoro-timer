@@ -127,7 +127,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
-tailwind_project/settings.py
 
 #env
 git rm --cached .env
+
