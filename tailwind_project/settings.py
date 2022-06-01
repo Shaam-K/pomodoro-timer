@@ -83,7 +83,7 @@ DATABASES = {
         'NAME': "DATABASE NAME",
         'HOST': "HOST",
         'PORT': "PORT",
-        'USER': "USER, DEFAULT IS ROOT",
+        'USER': "USER",
         'PASSWORD': "PASSWORD",
     }
 }
