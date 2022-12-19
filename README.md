@@ -1,3 +1,5 @@
+## Project is a work in progress (inactive as of now)
+
 ## Instructions before starting up project
 - Before starting this, make sure you create a new MySQL database for this project.
 - Npm modules may be out of date when you clone this repo, take out terminal and type out:
