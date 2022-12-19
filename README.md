@@ -50,5 +50,5 @@ In settings.py you need the following
 3) Type the command: `python manage.py runserver`.
 
 
-Sorry for not making this process user-friendly :/
-Thanks for checking out the repo :)
+- Sorry for not making this process user-friendly :/
+- Thanks for checking out the repo :)
